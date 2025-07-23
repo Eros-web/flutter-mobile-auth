@@ -1,0 +1,21 @@
+rules_version = '2';
+service cloud.firestore {
+  match /databases/{database}/documents {
+
+    // 🔐 USERS COLLECTION RULES
+    match /users/{userId} {
+      // User hanya boleh baca dan update dokumen miliknya sendiri
+      allow read, update: if request.auth != null && request.auth.uid == userId;
+      // Siapapun user yang login boleh create user baru (biasanya saat register)
+      allow create: if request.auth != null;
+    }
+
+    // 🔐 ORDERS COLLECTION RULES
+    match /orders/{orderId} {
+      // Saat create order, userId di dalam data harus sama dengan UID login
+      allow create: if request.auth != null && request.resource.data.userId == request.auth.uid;
+      // Hanya boleh baca, update, hapus orders miliknya sendiri
+      allow read, update, delete: if request.auth != null && resource.data.userId == request.auth.uid;
+    }
+  }
+}
