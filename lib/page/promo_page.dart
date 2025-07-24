@@ -4,8 +4,15 @@ import 'main_screen.dart';
 import 'package:provider/provider.dart';
 import 'package:myapp/provider/voucher_provider.dart';
 
-class PromoPage extends StatelessWidget {
+class PromoPage extends StatefulWidget {
   const PromoPage({super.key});
+
+  @override
+  State<PromoPage> createState() => _PromoPageState();
+}
+
+class _PromoPageState extends State<PromoPage> {
+  bool _initialized = false;
 
   final List<Map<String, dynamic>> promos = const [
     {
@@ -55,17 +62,24 @@ class PromoPage extends StatelessWidget {
   ];
 
   @override
+  void didChangeDependencies() {
+    super.didChangeDependencies();
+
+    if (!_initialized) {
+      _initialized = true;
+
+      Future.microtask(() {
+        final voucherProvider = Provider.of<VoucherProvider>(context, listen: false);
+        final voucherPromos = promos.where((p) => p.containsKey('code')).toList();
+        voucherProvider.setPromos(voucherPromos);
+      });
+    }
+  }
+
+  @override
   Widget build(BuildContext context) {
-    final voucherProvider = Provider.of<VoucherProvider>(context, listen: false);
-
-    // Kirim promo yang memiliki kode ke VoucherProvider
-    final voucherPromos = promos.where((p) => p.containsKey('code')).toList();
-    voucherProvider.setPromos(voucherPromos);
-
     return Scaffold(
-      appBar: AppBar(
-        title: const Text('Promo'),
-      ),
+      appBar: AppBar(title: const Text('Promo')),
       body: ListView.builder(
         itemCount: promos.length,
         itemBuilder: (context, index) {

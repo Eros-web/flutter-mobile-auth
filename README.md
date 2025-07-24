@@ -1,16 +1,23 @@
-# myapp
+# 🍔 Flutter Mobile Auth App
 
-A new Flutter project.
+Sebuah aplikasi Flutter untuk keperluan e-commerce dengan fitur autentikasi Firebase, integrasi Firestore, dan state management menggunakan Provider. Dirancang modular dan mudah dikembangkan lebih lanjut.
 
-## Getting Started
+## 🚀 Fitur Utama
 
-This project is a starting point for a Flutter application.
+- 🔐 Autentikasi pengguna menggunakan Firebase (email/password)
+- 🔄 Manajemen data real-time dengan Cloud Firestore
+- 🎨 UI responsif & terstruktur (berbasis folder modular)
+- 📦 State management menggunakan Provider
+- 🎁 Modul promo, keranjang belanja, histori pesanan, dan profil pengguna
+- ☁️ Integrasi Firebase Cloud Functions dan API tambahan (`store_api`)
 
-A few resources to get you started if this is your first Flutter project:
+## 📁 Struktur Folder
 
-- [Lab: Write your first Flutter app](https://docs.flutter.dev/get-started/codelab)
-- [Cookbook: Useful Flutter samples](https://docs.flutter.dev/cookbook)
-
-For help getting started with Flutter development, view the
-[online documentation](https://docs.flutter.dev/), which offers tutorials,
-samples, guidance on mobile development, and a full API reference.
+```bash
+lib/
+├── component/        # Model data (FoodItem, Order, Voucher, dll.)
+├── login-sigin/      # Halaman login & sign-up
+├── page/             # Halaman-halaman utama (Home, Checkout, Profile, dll.)
+├── provider/         # Provider untuk state management (CartProvider, AuthProvider, dll.)
+├── services/         # Service layer (AuthService, FirestoreService, dll.)
+└── main.dart         # Entry point aplikasi

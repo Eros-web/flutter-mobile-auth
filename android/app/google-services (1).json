@@ -1,29 +1,29 @@
 {
-  "project_info": {
-    "project_number": "677460898065",
-    "project_id": "authentic-ulang",
-    "storage_bucket": "authentic-ulang.firebasestorage.app"
-  },
-  "client": [
-    {
-      "client_info": {
-        "mobilesdk_app_id": "1:677460898065:android:406bb5651cb35a3c8adcb0",
-        "android_client_info": {
-          "package_name": "com.example.myapp"
-        }
-      },
-      "oauth_client": [],
-      "api_key": [
-        {
-          "current_key": "AIzaSyA8l78jQriET_m1iiNOWTAR7oIgnBpIcZQ"
-        }
-      ],
-      "services": {
-        "appinvite_service": {
-          "other_platform_oauth_client": []
+    "project_info": {
+      "project_number": "677460898065",
+      "project_id": "authentic-ulang",
+      "storage_bucket": "authentic-ulang.firebasestorage.app"
+    },
+    "client": [
+      {
+        "client_info": {
+          "mobilesdk_app_id": "1:677460898065:android:406bb5651cb35a3c8adcb0",
+          "android_client_info": {
+            "package_name": "com.example.myapp"
+          }
+        },
+        "oauth_client": [],
+        "api_key": [
+          {
+            "current_key": "AIzaSyA8l78jQriET_m1iiNOWTAR7oIgnBpIcZQ"
+          }
+        ],
+        "services": {
+          "appinvite_service": {
+            "other_platform_oauth_client": []
+          }
         }
       }
-    }
-  ],
-  "configuration_version": "1"
-}
+    ],
+    "configuration_version": "1"
+  }
