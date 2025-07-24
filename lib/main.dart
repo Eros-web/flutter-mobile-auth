@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:firebase_core/firebase_core.dart';
 import 'package:firebase_auth/firebase_auth.dart';
+import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:provider/provider.dart';
 
 import 'provider/cart_provider.dart';
@@ -18,6 +19,8 @@ import 'page/promo_page.dart';
 import 'page/profile_page.dart';
 import 'page/checkout_page.dart';
 import 'page/search_location_page.dart';
+
+import 'admin/admin_dashboard.dart'; // ✅ Tambahan admin
 
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
@@ -52,8 +55,7 @@ class MyApp extends StatelessWidget {
         '/checkout': (context) => const CheckoutPage(),
         '/search_location': (context) => Builder(
               builder: (ctx) {
-                final args =
-                    ModalRoute.of(ctx)?.settings.arguments as Map<String, dynamic>?;
+                final args = ModalRoute.of(ctx)?.settings.arguments as Map<String, dynamic>?;
                 return SearchLocationPage(initialSearchQuery: args?['query']);
               },
             ),
@@ -82,16 +84,26 @@ class _AuthCheckerState extends State<AuthChecker> {
   Future<void> checkLoginStatus() async {
     final currentUser = FirebaseAuth.instance.currentUser;
 
-    debugPrint('✅ AuthChecker: currentUser = ${currentUser?.uid}');
-
     if (!mounted) return;
 
-    setState(() {
-      _targetScreen = (currentUser != null)
-          ? const MainPage()
-          : const LoginScreen();
-      _loading = false;
-    });
+    if (currentUser != null) {
+      final doc = await FirebaseFirestore.instance
+          .collection('users')
+          .doc(currentUser.uid)
+          .get();
+
+      final role = doc.data()?['role'] ?? 'user';
+
+      setState(() {
+        _targetScreen = role == 'admin' ? const AdminDashboard() : const MainPage();
+        _loading = false;
+      });
+    } else {
+      setState(() {
+        _targetScreen = const LoginScreen();
+        _loading = false;
+      });
+    }
   }
 
   @override
@@ -141,8 +153,7 @@ class _MainPageState extends State<MainPage> {
                   if (!mounted) return;
 
                   if (result != null) {
-                    final locProvider =
-                        Provider.of<LocationProvider>(context, listen: false);
+                    final locProvider = Provider.of<LocationProvider>(context, listen: false);
                     locProvider.updateSafe(
                       result['location'],
                       result['method'],
@@ -171,8 +182,7 @@ class _MainPageState extends State<MainPage> {
                             detail != null
                                 ? '$method di $detail'
                                 : 'Cari outlet atau produk...',
-                            style: const TextStyle(
-                                color: Colors.grey, fontSize: 14),
+                            style: const TextStyle(color: Colors.grey, fontSize: 14),
                           );
                         },
                       ),
@@ -218,10 +228,8 @@ class _MainPageState extends State<MainPage> {
         type: BottomNavigationBarType.fixed,
         items: const [
           BottomNavigationBarItem(icon: Icon(Icons.home), label: 'Beranda'),
-          BottomNavigationBarItem(
-              icon: Icon(Icons.restaurant_menu), label: 'Menu'),
-          BottomNavigationBarItem(
-              icon: Icon(Icons.history), label: 'Riwayat'),
+          BottomNavigationBarItem(icon: Icon(Icons.restaurant_menu), label: 'Menu'),
+          BottomNavigationBarItem(icon: Icon(Icons.history), label: 'Riwayat'),
           BottomNavigationBarItem(icon: Icon(Icons.person), label: 'Profil'),
         ],
       ),

@@ -3,6 +3,25 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
 class AuthService {
+    /// Ambil role user dari Firestore (default: 'user')
+  Future<String> getUserRole(String uid) async {
+    print('[getUserRole] Cek role untuk UID: $uid');
+    try {
+      final doc = await _firestore.collection('users').doc(uid).get();
+      if (doc.exists && doc.data()!.containsKey('role')) {
+        final role = doc['role'] as String;
+        print('[getUserRole] Role ditemukan: $role');
+        return role;
+      } else {
+        print('[getUserRole] Role tidak ditemukan, default ke user');
+        return 'user';
+      }
+    } catch (e) {
+      print('[getUserRole ERROR] $e');
+      return 'user';
+    }
+  }
+
   final FirebaseAuth _auth = FirebaseAuth.instance;
   final FirebaseFirestore _firestore = FirebaseFirestore.instance;
 
